@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v2  # Set up Java (required for Android build)
         with:
           java-version: '11'
-          distribution: 'adoptopenjdk'  # Use AdoptOpenJDK for Java
+          distribution: 'adoptium'  # Use Adoptium as the distribution
 
       - name: Install Dependencies
         run: |
