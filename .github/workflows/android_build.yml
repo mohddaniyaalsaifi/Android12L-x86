@@ -10,33 +10,25 @@ jobs:
     runs-on: ubuntu-latest  # Use Ubuntu for building
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout the code
         uses: actions/checkout@v2  # Clone the repository
 
+      # Step 2: Set up JDK (Java 11, using Zulu JDK)
       - name: Set up JDK
         uses: actions/setup-java@v2  # Set up Java (required for Android build)
         with:
           java-version: '11'
           distribution: 'zulu'  # Use Zulu JDK for Java 11
 
+      # Step 3: Install dependencies
       - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y repo git python3  # Install dependencies like repo, git, and python3
 
+      # Step 4: Initialize the Repo for Android 12L with correct branch
       - name: Initialize Repo
         run: |
-          repo init -u https://android.googlesource.com/platform/manifest -b android-12l  # Initialize the repo for Android 12L
-          repo sync  # Sync the repository to get the latest source code
-
-      - name: Set up the build environment
-        run: |
-          source build/envsetup.sh  # Set up the build environment
-
-      - name: Choose build target
-        run: |
-          lunch aosp_x86-eng  # Choose the target build configuration (for x86)
-
-      - name: Build Android 12L
-        run: |
-          make -j$(nproc)  # Build Android with all available CPU cores
+          repo init -u https://android.googlesource.com/platform/manifest -b android-12.1.0_r1  # Correct branch for Android 12L
+          repo sync  # Sync the repository to get 
