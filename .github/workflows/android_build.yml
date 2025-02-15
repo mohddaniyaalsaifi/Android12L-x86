@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v2  # Set up Java (required for Android build)
         with:
           java-version: '11'
-          distribution: 'adoptium'  # Use Adoptium as the distribution
+          distribution: 'zulu'  # Use Zulu JDK for Java 11
 
       - name: Install Dependencies
         run: |
