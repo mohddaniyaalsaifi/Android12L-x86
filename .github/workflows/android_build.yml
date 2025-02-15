@@ -1,0 +1,41 @@
+name: Android 12L Build
+
+on:
+  push:
+    branches:
+      - main  # This triggers the build process when pushing to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # This specifies the operating system for the job
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2  # This step checks out the repository code
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2  # This step sets up the JDK environment (Java 11)
+        with:
+          java-version: '11'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y repo git python3
+          # This step installs the necessary dependencies like repo, git, and python3
+
+      - name: Initialize Repo
+        run: |
+          repo init -u https://android.googlesource.com/platform/manifest -b android-12l
+          repo sync
+          # This initializes the repo and synchronizes it to get the Android source code
+
+      - name: Set up the build environment
+        run: |
+          source build/envsetup.sh
+          # This sets up the Android build environment
+
+      - name: Build Android 12L
+        run: |
+          lunch aosp_x86-eng  # Sets the build environment for the x86 architecture
+          make -j$(nproc)  # Builds Android 12L using all available CPU cores
