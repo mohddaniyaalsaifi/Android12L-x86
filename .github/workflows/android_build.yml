@@ -3,41 +3,40 @@ name: Android 12L Build
 on:
   push:
     branches:
-      - main  # This triggers the build process when pushing to the main branch
+      - main  # Trigger the build when code is pushed to the main branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # This specifies the operating system for the job
+    runs-on: ubuntu-latest  # Use Ubuntu for building
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v2  # This step checks out the repository code
+        uses: actions/checkout@v2  # Clone the repository
 
       - name: Set up JDK
         uses: actions/setup-java@v2  # Set up Java (required for Android build)
         with:
-        java-version: '11'
-       distribution: 'adoptopenjdk'  # Specify AdoptOpenJDK as the distribution
-
+          java-version: '11'
+          distribution: 'adoptopenjdk'  # Use AdoptOpenJDK for Java
 
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y repo git python3
-          # This step installs the necessary dependencies like repo, git, and python3
+          sudo apt-get install -y repo git python3  # Install dependencies like repo, git, and python3
 
       - name: Initialize Repo
         run: |
-          repo init -u https://android.googlesource.com/platform/manifest -b android-12l
-          repo sync
-          # This initializes the repo and synchronizes it to get the Android source code
+          repo init -u https://android.googlesource.com/platform/manifest -b android-12l  # Initialize the repo for Android 12L
+          repo sync  # Sync the repository to get the latest source code
 
       - name: Set up the build environment
         run: |
-          source build/envsetup.sh
-          # This sets up the Android build environment
+          source build/envsetup.sh  # Set up the build environment
+
+      - name: Choose build target
+        run: |
+          lunch aosp_x86-eng  # Choose the target build configuration (for x86)
 
       - name: Build Android 12L
         run: |
-          lunch aosp_x86-eng  # Sets the build environment for the x86 architecture
-          make -j$(nproc)  # Builds Android 12L using all available CPU cores
+          make -j$(nproc)  # Build Android with all available CPU cores
